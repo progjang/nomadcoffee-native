@@ -1,10 +1,14 @@
 import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {Asset} from 'expo-asset';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from "expo-font";
+import Navigation from './navigators/Navigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { ApolloProvider } from '@apollo/client';
+import client from './apollo';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -23,10 +27,11 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }
 
