@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Image, Text, StyleSheet, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { logUserOut } from "../apollo";
@@ -31,8 +32,14 @@ const LinkedButton = styled.View`
 const SText = styled.Text`
     color: white;
 `;
-function Me() {
+function Me({navigation}) {
     const data = useMe();
+    useEffect(() => {
+      navigation.setOptions({
+        headerTitle: data?.me?.username,
+      })
+    }, []);
+
     return (
         <View style={{
                 backgroundColor: "black",

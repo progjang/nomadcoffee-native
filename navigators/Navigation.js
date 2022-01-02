@@ -9,12 +9,14 @@ import StackNavFactory from "./StackNavFactory.";
 import { isLoggedInVar } from "../apollo";
 import { useReactiveVar } from "@apollo/client";
 import Login from "../screens/LogIn";
+import useMe from "../hooks/useMe";
+import { Image } from "react-native";
 
 const Tabs = createBottomTabNavigator();
 
 export default function Navigation() {
-    const isLoggedIn = useReactiveVar(isLoggedInVar);
-    console.log(isLoggedIn);
+    const data = useMe();
+    console.log(data);
     return (
         <Tabs.Navigator
             screenOptions={{
@@ -47,11 +49,23 @@ export default function Navigation() {
 
             <Tabs.Screen name="MeRoot" 
             options={{
-                tabBarIcon: ({focused, color, size}) => (
-                    <Ionicons name="person" color={color} size={focused? 24: 20} />
-                ),
-            }}>
-            {(props) => isLoggedIn ? <Me {...props}/> : <Login /> }
+                tabBarIcon: ({focused, color, size}) => 
+                    data?.me?.avatarURL ? (
+                        <Image
+                            source={{uri: data.me.avatarURL}}
+                            style={{
+                                height: 25,
+                                width: 25,
+                                borderRadius: 10,
+                                ...(focused && {borderColor: "white", borderWidth: 1})
+                            }}
+                        />
+                    ) : ( 
+                            <Ionicons name="person" color={color} size={focused? 24: 20} />
+                    ),
+            }}
+            >
+            {(props) => data ? <Me {...props}/> : <Login /> }
             </Tabs.Screen>
 
         </Tabs.Navigator>
