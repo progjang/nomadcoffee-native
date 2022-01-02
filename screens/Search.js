@@ -2,7 +2,7 @@ import { gql, useLazyQuery, useReactiveVar } from "@apollo/client";
 import React from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { ActivityIndicator, FlatList, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, TextInput, Image, useWindowDimensions, View } from "react-native";
 import styled from "styled-components/native";
 import { isLoggedInVar, logUserOut } from "../apollo";
 import DismissKeyboard from "../components/auth/DismissKeyboard";
@@ -12,6 +12,10 @@ const SEARCH_COFFEESHOPS_QUERY = gql`
         searchCoffeeShops(keyword: $keyword) {
             id
             name
+            photos {
+                id
+                url
+            }
         }
     }
 `;
@@ -37,8 +41,8 @@ const SearchInput = styled.TextInput`
 `;
 
 function Search({navigation}) {
-    const numColumns = 1;
-    const {width} = useWindowDimensions();
+    const numColumns =2;
+    const {width, height} = useWindowDimensions();
     const {setValue, register, watch, handleSubmit} = useForm();
     const [startSearchFn, {loading, data, called}] = useLazyQuery(SEARCH_COFFEESHOPS_QUERY);
 
@@ -72,8 +76,24 @@ function Search({navigation}) {
         });
     },[]);
     console.log(data);
+    const renderPhoto = (photo) => {
+        return (
+            <View key={photo.id}>
+                <Image
+                    style={{
+                        width: width/2,
+                        height: height/2
+                    }}
+                    source={{uri : photo.url}}
+                />
+            </View>
+        )
+    }
     const renderItem = ({item:shop}) => (
+        <View>
         <Text style={{color: "white"}}>{shop.name}</Text>
+        {shop.photos.length > 0 ? (shop.photos.map(renderPhoto)) : null }
+        </View>
     )
     return (
         <DismissKeyboard>
