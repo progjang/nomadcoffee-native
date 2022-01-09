@@ -51,6 +51,7 @@ export default function Home() {
         )
     }
     const renderCoffeeShop = ({item:coffeeShop}) => {
+        console.log(coffeeShop);
         return (
             <View style={{ flex:1 }}>
                 <Text style={{color:"white"}}>{coffeeShop.id}-{coffeeShop.name}</Text>

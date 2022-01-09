@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { ActivityIndicator, FlatList, Text, TextInput, Image, useWindowDimensions, View } from "react-native";
 import styled from "styled-components/native";
 import { isLoggedInVar, logUserOut } from "../apollo";
-import DismissKeyboard from "../components/auth/DismissKeyboard";
+import DismissKeyboard from "../components/DismissKeyboard";
 
 const SEARCH_COFFEESHOPS_QUERY = gql`
     query searchCoffeeShops($keyword: String!) {

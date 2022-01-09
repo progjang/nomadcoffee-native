@@ -1,73 +1,47 @@
 import React from "react";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
-import Search from "../screens/Search";
-import Me from "../screens/Me";
-import Profile from "../screens/Profile";
+import { createStackNavigator } from "@react-navigation/stack";
+import TabsNav from "./TabsNav";
+import UploadNav from "./UploadNav";
+import UploadForm from "../screens/UploadForm";
 import { Ionicons } from "@expo/vector-icons";
-import StackNavFactory from "./StackNavFactory.";
-import { isLoggedInVar } from "../apollo";
-import { useReactiveVar } from "@apollo/client";
-import Login from "../screens/LogIn";
-import useMe from "../hooks/useMe";
-import { Image } from "react-native";
 
-const Tabs = createBottomTabNavigator();
+
+const Stack = createStackNavigator();
 
 export default function Navigation() {
-    const data = useMe();
-    console.log(data);
     return (
-        <Tabs.Navigator
-            screenOptions={{
-                tabBarActiveTintColor: "white",
-                tabBarShowLabel: false,
-                headerShown: false,
-                tabBarStyle: {
-                borderTopColor: "rgba(255, 255, 255, 0.3)",
-                backgroundColor: "black",
+        <Stack.Navigator screenOptions={
+            {
+                presentation: "modal"
+            
+            }
+        }
+        >
+            <Stack.Screen
+                name="Tabs"
+                options={{ headerShown: false }}
+                component={TabsNav}
+            />
+            <Stack.Screen
+                name="Upload"
+                options={{ headerShown: false }}
+                component={UploadNav}
+            />
+            <Stack.Screen
+                name="UploadForm"
+                options={{
+                headerBackTitleVisible: false,
+                headerBackImage: ({ tintColor }) => (
+                    <Ionicons color={tintColor} name="close" size={28} />
+                ),
+                title: "Upload",
+                headerTintColor: "white",
+                headerStyle: {
+                    backgroundColor: "black",
                 },
-            }}>
-
-            <Tabs.Screen name="HomeRoot" 
-            options={{
-                tabBarIcon: ({focused, color, size}) => (
-                    <Ionicons name="home" color={color} size={focused? 24: 20} />
-                ),
-            }}>
-            {()=><StackNavFactory screenName="Home" />}
-            </Tabs.Screen>
-
-            <Tabs.Screen name="SearchRoot" 
-            options={{
-                tabBarIcon: ({focused, color, size}) => (
-                    <Ionicons name="search" color={color} size={focused? 24: 20} />
-                ),
-            }}>
-            {()=><StackNavFactory screenName="Search" />}
-            </Tabs.Screen>
-
-            <Tabs.Screen name="MeRoot" 
-            options={{
-                tabBarIcon: ({focused, color, size}) => 
-                    data?.me?.avatarURL ? (
-                        <Image
-                            source={{uri: data.me.avatarURL}}
-                            style={{
-                                height: 25,
-                                width: 25,
-                                borderRadius: 10,
-                                ...(focused && {borderColor: "white", borderWidth: 1})
-                            }}
-                        />
-                    ) : ( 
-                            <Ionicons name="person" color={color} size={focused? 24: 20} />
-                    ),
-            }}
-            >
-            {(props) => data ? <Me {...props}/> : <Login /> }
-            </Tabs.Screen>
-
-        </Tabs.Navigator>
-    )
+                }}
+                component={UploadForm}
+            />
+        </Stack.Navigator>
+   )
 }
